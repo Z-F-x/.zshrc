@@ -1,23 +1,18 @@
-# Override 'cd' to log directories
 cd() {
     builtin cd "$@" || return
     
-    # Create .cd_history if it doesn't exist
     if [[ ! -f ~/.cd_history ]]; then
         touch ~/.cd_history
     fi
 
-    # Log the current directory to .cd_history
     echo "$(pwd)" >> ~/.cd_history
 }
 
 
 
 cdl() {
-    # Generate the top 25 most-used directories
     local dir=$(sort ~/.cd_history | uniq -c | sort -nr | awk '{$1=""; print $0}' | sed 's/^ *//' | fzf --height 20 --reverse --prompt="Select directory: ")
     
-    # Change to the selected directory if not empty
     if [[ -n "$dir" ]]; then
         cd "$dir"
     else
