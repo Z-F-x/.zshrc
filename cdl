@@ -1,23 +1,26 @@
 cd() {
     builtin cd "$@" || return
-    
+
+    # Create .cd_history if it doesn't exist
     if [[ ! -f ~/.cd_history ]]; then
         touch ~/.cd_history
     fi
 
+    # Log the current directory to .cd_history
     echo "$(pwd)" >> ~/.cd_history
 }
 
-
-
 cdl() {
-    local dir=$(sort ~/.cd_history | uniq -c | sort -nr | awk '{$1=""; print $0}' | sed 's/^ *//' | fzf --height 20 --reverse --prompt="Select directory: ")
+    # Generate the top directories with usage counts
+    local dir=$(sort ~/.cd_history | uniq -c | sort -nr | awk '{printf "%-6s %s\n", $1, $2}' | fzf --height 20 --reverse --prompt="Select directory: ")
     
-    if [[ -n "$dir" ]]; then
-        cd "$dir"
+    # Extract the directory from the selected line
+    local selected_dir=$(echo "$dir" | awk '{print $2}')
+    
+    # Change to the selected directory if not empty
+    if [[ -n "$selected_dir" ]]; then
+        cd "$selected_dir"
     else
         echo "No directory selected."
     fi
 }
-
-
