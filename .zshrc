@@ -69,7 +69,7 @@ alias Aur='yay'
 # Override 'cd' to log directories
 cd() {
     builtin cd "$@" || return
-    
+
     # Create .cd_history if it doesn't exist
     if [[ ! -f ~/.cd_history ]]; then
         touch ~/.cd_history
@@ -79,19 +79,21 @@ cd() {
     echo "$(pwd)" >> ~/.cd_history
 }
 
-
-
 cdl() {
-    # Generate the top 25 most-used directories
-    local dir=$(sort ~/.cd_history | uniq -c | sort -nr | awk '{$1=""; print $0}' | sed 's/^ *//' | fzf --height 20 --reverse --prompt="Select directory: ")
+    # Generate the top directories with usage counts
+    local dir=$(sort ~/.cd_history | uniq -c | sort -nr | awk '{printf "%-6s %s\n", $1, $2}' | fzf --height 20 --reverse --prompt="Select directory: ")
+    
+    # Extract the directory from the selected line
+    local selected_dir=$(echo "$dir" | awk '{print $2}')
     
     # Change to the selected directory if not empty
-    if [[ -n "$dir" ]]; then
-        cd "$dir"
+    if [[ -n "$selected_dir" ]]; then
+        cd "$selected_dir"
     else
         echo "No directory selected."
     fi
 }
+
 
 
 
