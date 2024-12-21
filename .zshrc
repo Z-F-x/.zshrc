@@ -2,6 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="zfx"
 
 plugins=(
     git
@@ -109,3 +110,4 @@ export PATH=$PATH:~/gradle/bin
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk 
 export PATH=$JAVA_HOME/bin:$PATH
 export PATH=$PATH:/home/zfx/.local/bin
+
