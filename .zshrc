@@ -51,7 +51,9 @@ alias cøl='clear'
 alias cål='clear'
 alias cæl='clear'
 alias cdl='cdw'
-
+alias CD='cd'
+alias cD='cd'
+alias Cd='cd'
 
 
 
@@ -71,12 +73,12 @@ ls_dynamic() {
     # Check if the item count is more than 20
     if [ "$item_count" -gt 20 ]; then
         # Just run eza without column formatting
-        eza -a --icons "$DIR"
+        eza -a --icons  --group-directories-first "$DIR"
 #clear; eza -a --icons -1 "$DIR"
 
     else
         # Run eza with icons and format the output with column
-        eza -a --icons -1 "$DIR" 
+        eza -a --icons -1 --group-directories-first "$DIR" 
     fi
 }
 
@@ -298,10 +300,10 @@ ls_dynamic() {
   # Check if the item count is more than 20
   if [ "$item_count" -gt 20 ]; then
       # Just run eza without column formatting
-      eza -a --icons "$DIR"
+      eza -a --icons  --group-directories-first "$DIR"
   else
       # Run eza with icons and format the output with column
-      eza -a --icons -1 "$DIR"
+      eza -a --icons -1  --group-directories-first "$DIR"
   fi
 }
 
