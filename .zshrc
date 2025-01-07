@@ -28,7 +28,7 @@ alias uallmi='sudo pacman -Suy; yay -Suy; sudo flatpak update; sudo snap refresh
 
 
 # alias ls='clear; eza -a --icons -1'
-alias ls='ls_dynamic'
+alias ls='clear; ls_dynamic'
 alias ll='eza -al --icons'
 alias lt='eza -a --tree --level=1 --icons'
 alias lt10='eza -a --tree --level=10 --icons'
@@ -42,7 +42,7 @@ alias lt3='eza -a --tree --level=3 --icons'
 alias lt2='eza -a --tree --level=2 --icons'
 alias lt1='eza -a --tree --level=1 --icons'
 alias lt0='eza -a --tree --level=0 --icons'
-alias cls='clear'
+alias cls='clear; ls'
 alias CLS='clear'
 alias clø='clear'
 alias clå='clear'
@@ -280,6 +280,7 @@ cd() {
 }
 
 ls_dynamic() {
+  clear
   # Set the directory you want to check (use the current directory passed as argument)
   local DIR="${1:-$(pwd)}"
 
