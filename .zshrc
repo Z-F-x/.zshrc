@@ -1,5 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+export TERM=xterm-256color
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="zfx"
@@ -21,10 +22,65 @@ fastfetch
 # fastfetch. Will be disabled if above colorscript was chosen to install
 #fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
 
+alias ls-txt='printf "%s\n" *.txt'
+alias show-text='printf "%s\n" *.txt'
+alias txt='printf "%s\n" *.txt'
+alias lsd='eza -d */ -1 --icons'
 
+
+lsformat(){
+echo ""
+}
+
+lsfecho() {
+  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfa\033[38;5;250m to see hidden files.\033[0m\n"
+}
+
+lsfhidden(){
+  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfh\033[38;5;250m to \033[1;4monly\033[0m hidden files.\033[0m\n"
+}
+
+# add_icons_to_files() {
+#     eza_output=$(eza -1 --icons -a --only-files | sed -n '/^\./p')
+#
+#     while IFS= read -r file; do
+#         # Use eza's output to add the correct icon to each file
+#         # eza automatically displays icons based on file types, so we can capture the icon and filename
+#         icon=$(echo "$file" | cut -d ' ' -f1)  # Capture the icon
+#         filename=$(echo "$file" | cut -d ' ' -f2-)  # Capture the filename
+#         echo "$icon $filename"  # Display the icon along with the filename
+#     done <<< "$eza_output"
+# }
+
+# TODO Write custom icon-set for each file type similar to eza 
+add_icons_to_files() {
+    eza -1 --icons -a --only-files | sed -n '/^\./p' | while IFS= read -r line; do
+        echo "📄 $line"  # Add a custom emoji or text before each file
+    done
+}
+
+alias lsf='lsformat; eza -1 --icons --only-files; lsfecho;'
+alias lsfa='lsformat; eza -1 --icons --only-files --all; lsfhidden;'
+#alias lsfh="lsformat; eza -1 --icons -a --only-files | grep '^\.'"
+alias lsfh="eza -1 --icons -a --only-files | sed -n '/^\./p'"
+alias lsfg="add_icons_to_files"
+
+# Update pacman, flatpak, snap and AUR
 alias uallmu='sudo pacman -Suy yay -Suy flatpak update snap refresh'
 alias uallp='sudo pacman -Suy && yay -Suy && flatpak update && snap refresh'
 alias uallmi='sudo pacman -Suy; yay -Suy; sudo flatpak update; sudo snap refresh'
+
+
+# Launch a KDE Plasma session through Wayland.
+alias plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias plasmaKDE='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDEplasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDE-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDE-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-launch='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
 
 
 # alias ls='clear; eza -a --icons -1'
@@ -359,4 +415,6 @@ export PATH=$JAVA_HOME/bin:$PATH
 export PATH=$PATH:/home/zfx/.local/bin
 
 echo -e "\e[2 q"  # Forces a block cursor at all times
+
+[ -n "$FBTERM" ] && export TERM=fbterm
 
