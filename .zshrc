@@ -1,47 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-export TERM=xterm-256color
-
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="zfx"
-
-plugins=(
-    git
-    archlinux
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# Check archlinux plugin commands here
-# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/archlinux
-
-fastfetch
-
-# fastfetch. Will be disabled if above colorscript was chosen to install
-#fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
-
-alias ls-txt='printf "%s\n" *.txt'
-alias show-text='printf "%s\n" *.txt'
-alias txt='printf "%s\n" *.txt'
-alias lsd='eza -d */ -1 --icons'
-
-
-lsformat(){
-echo ""
-}
-
-lsfecho() {
-  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfa\033[38;5;250m to see hidden files.\033[0m\n"
-}
-
-lsfhidden(){
-  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfh\033[38;5;250m to \033[1;4monly\033[0m hidden files.\033[0m\n"
-}
-
-# add_icons_to_files() {
-#     eza_output=$(eza -1 --icons -a --only-files | sed -n '/^\./p')
 #
 #     while IFS= read -r file; do
 #         # Use eza's output to add the correct icon to each file
@@ -52,69 +8,101 @@ lsfhidden(){
 #     done <<< "$eza_output"
 # }
 
-# TODO Write custom icon-set for each file type similar to eza 
+# TODO: Write custom icon-set for each file type similar to eza 
 add_icons_to_files() {
     eza -1 --icons -a --only-files | sed -n '/^\./p' | while IFS= read -r line; do
         echo "📄 $line"  # Add a custom emoji or text before each file
     done
 }
 
-alias lsf='lsformat; eza -1 --icons --only-files; lsfecho;'
-alias lsfa='lsformat; eza -1 --icons --only-files --all; lsfhidden;'
-#alias lsfh="lsformat; eza -1 --icons -a --only-files | grep '^\.'"
-alias lsfh="eza -1 --icons -a --only-files | sed -n '/^\./p'"
-alias lsfg="add_icons_to_files"
+alias lsfiles="list_specific_file_type_eza"
+alias lsftype="list_specific_file_type_eza"
+alias lsft="list_specific_file_type_eza"
+alias lsfiletype="list_specific_file_type_eza"
+alias filetype="list_specific_file_type_eza"
+alias ft="list_specific_file_type_eza"
+alias lst="list_specific_file_type_eza"
+alias lstype="list_specific_file_type_eza"
 
-# Update pacman, flatpak, snap and AUR
-alias uallmu='sudo pacman -Suy yay -Suy flatpak update snap refresh'
-alias uallp='sudo pacman -Suy && yay -Suy && flatpak update && snap refresh'
-alias uallmi='sudo pacman -Suy; yay -Suy; sudo flatpak update; sudo snap refresh'
+# TODO: Add function that counts the total ammount of files of specific file
+# type, and 2). Adds an appropriate icon with proper formattingo. And 3). A
+# informational message  For more options do -f -a -b -c etc. 
 
+# List specific file types. E.g., lsfiles .txt 
+list_specific_file_type_eza() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: listfiles <extension>"
+    return 1
+  fi
 
-# Launch a KDE Plasma session through Wayland.
-alias plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias plasmaKDE='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDEplasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDE-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDE-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-launch='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+  # Remove leading dot if user includes it (normalize input)
+  ext="${1#.}"
 
+  # Check if any file has the given extension
+  matches=(*."$ext"(.N)) # Zsh globbing to find matching files
 
-# alias ls='clear; eza -a --icons -1'
-alias ls='clear; ls_dynamic'
-alias ll='eza -al --icons'
-alias lt='eza -a --tree --level=1 --icons'
-alias lt10='eza -a --tree --level=10 --icons'
-alias lt9='eza -a --tree --level=9 --icons'
-alias lt='eza -a --tree --level=8 --icons'
-alias lt7='eza -a --tree --level=7 --icons'
-alias lt6='eza -a --tree --level=6 --icons'
-alias lt5='eza -a --tree --level=5 --icons'
-alias lt4='eza -a --tree --level=4 --icons'
-alias lt3='eza -a --tree --level=3 --icons'
-alias lt2='eza -a --tree --level=2 --icons'
-alias lt1='eza -a --tree --level=1 --icons'
-alias lt0='eza -a --tree --level=0 --icons'
-alias cls='clear; ls'
-alias CLS='clear'
-alias clø='clear'
-alias clå='clear'
-alias clæ='clear'
-alias cøl='clear'
-alias cål='clear'
-alias cæl='clear'
-alias cdl='cdw'
-alias CD='cd'
-alias cD='cd'
-alias Cd='cd'
+  if [[ ${#matches[@]} -eq 0 ]]; then
+    echo "No files found with .$ext extension."
+    return 1
+  fi
 
+  # Use eza if installed, otherwise fallback to ls
+  if command -v eza &>/dev/null; then
+    eza --icons --group-directories-first *."$ext"
+  else
+    ls -lh *."$ext"
+  fi
+}
 
+# List only files
+alias sortbytype="list_files_sort_extension"
+alias sftype="list_files_sort_extension"
+alias lstype="list_files_sort_extension"
 
+# List only files (not folders nor files in folders) in current directory
+list_files_sort_extension() {
+  # Use eza if installed
+  if command -v eza &>/dev/null; then
+    eza --icons --only-files --color=always --sort=ext
+  else
+    # Fallback to ls + sort
+    ls -lh --color=always | sort -k9 -t.
+  fi
+}
 
+# List files and folders and sort files by extensions
+alias sortall="list_files_and_folders_sort_by_extensions"
+list_files_and_folders_sort_by_extensions() {
+  # Use eza if installed
+  if command -v eza &>/dev/null; then
+    eza --icons  --group-directories-first --color=always --sort=ext
+  else
+    # Fallback to ls + sort
+    ls -lh --color=always | sort -k9 -t.
+  fi
+}
 
+# lsfile() {
+#   if [[ -z "$1" ]]; then
+#     echo "Usage: listfiles <pattern>"
+#     return 1
+#   fi
+#   printf "%s\n" *"$1"*
+# }
+
+# alias lsfall='list_all_files_in_current_directory'
+# alias lsfilesall='list_all_files_in_current_directory'
+
+# list_all_files_in_current_directory() {
+#   if [[ -z "$1" ]]; then
+#     echo "Usage: listfiles <pattern>"
+#     return 1
+#   fi
+#   eza --ignore-glob="!*$1*" --icons --only-files
+# }
+
+# Navigation functionality that overwrites normal functionality of the `cd`
+# command. Clears screen inbetween each navigational step. Uses eza.
 
 ls_dynamic() {
     # Set the directory you want to check (use the current directory by default)
@@ -138,11 +126,15 @@ ls_dynamic() {
     fi
 }
 
-
+# Aliases for open_ls
+alias lsnav='open_ls'
+alias nav='open_ls'
 
 # Function to handle selecting and opening files or directories
 open_ls() {
     # Use eza (or ls) for listing files and folders
+
+
     local selected=$(eza -1 --icons "$DIR" | fzf --height=40% --border --prompt="Select a file or folder: ")
 
     # Strip enclosing single quotes if present
@@ -168,10 +160,11 @@ open_ls() {
 
 
 
-alias lsnav='open_ls'
+# Alias turning vim to nvim
 alias vim='nvim'
+
+# Alias for old vim
 alias oldvim='vim'
-alias nav='open_ls'
 
 
 #open_lss() {
@@ -201,6 +194,7 @@ alias nav='open_ls'
 # alias lsnavv='open_lss'
 
 
+# Opens fzf in currrent dir in terminal
 select_open() {
     local file=$(ls -1 | fzf)
     [ -n "$file" ] && xdg-open "$file" >/dev/null 2>&1
@@ -216,17 +210,18 @@ export NNN_OPENER="xdg-open"
 # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 source <(fzf --zsh)
 
+# .zsh history 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
-alias AUR='yay'
-alias Aur='yay'
-alias aur='yay'
-alias auR='yay'
-alias AuR='yay'
-alias Aur='yay'
-
+# ############################################################################ #
+#                         File System Navigation Ends                          # 
+# ############################################################################ #
+#                                  cdw begins
+# ############################################################################ #
+#   Set of scripts to keep track of top 25 most used file system paths        #
+# ############################################################################ #
 
 remove_duplicates_and_update_visits() {
     local cd_history_file=~/.cd_history
@@ -387,14 +382,50 @@ cdw() {
         remove_duplicates_and_update_visits
 }
 
+# ############################################################################ #
+# cdw ends - Set of scripts to keep track of top 25 most used file ...         #
+# ############################################################################ #
+#                        Language, Locale & Input begins:                      #
+# ############################################################################ #
 
+# Set Norwegian Bokmål keyboard layout if not already set
+# if [[ "$(setxkbmap -query | grep layout | awk '{print $2}')" != "no" ]]; then
+#     setxkbmap no
+# fi
 
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+# Set default language and encoding
+export LANG="en_US.UTF-8"  
 
-export XMODIFIERS=@im=xim
-export GTK_IM_MODULE=xim
-export QT_IM_MODULE=xim
+# Ensure UTF-8 character encoding is used
+export LC_CTYPE="en_US.UTF-8"  
+
+# Use American Englishfor system messages
+export LC_MESSAGES="en_US.UTF-8"  
+
+# Use Norwegian format for date/time (dd.mm.yyyy)
+export LC_TIME="nb_NO.UTF-8"  
+
+# Set currency format to Norwegian (Kroner)
+export LC_MONETARY="nb_NO.UTF-8"  
+
+# Use Norwegian decimal separators (comma instead of dot)
+export LC_NUMERIC="nb_NO.UTF-8"  
+
+# Keep default sorting behavior (C uses traditional ASCII sorting)
+export LC_COLLATE="C"  
+
+# Set X Input Method (XIM) as the input method framework for X applications
+export XMODIFIERS=@im=xim  
+
+# Force GTK applications (like Gedit, Firefox) to use XIM for handling text input
+export GTK_IM_MODULE=xim  
+
+# Force Qt applications (like VLC, Dolphin) to use XIM for handling text input
+export QT_IM_MODULE=xim 
+
+# ########################################################################### #
+#                              Vim-related:                                   #
+# ########################################################################### #
 
 # Enable Right Windows key + Vim-style navigation (Windows + h, j, k, l)
 bindkey -M emacs "^[[27;5;h" backward-char      # Windows + h to move left
@@ -402,19 +433,33 @@ bindkey -M emacs "^[[27;5;l" forward-char       # Windows + l to move right
 bindkey -M emacs "^[[27;5;j" down-line-or-history # Windows + j to move down
 bindkey -M emacs "^[[27;5;k" up-line-or-history   # Windows + k to move up
 
+# ########################################################################### #
+#                              Developement related:                          #
+# ########################################################################### #
+
 # Android SDK
 
+# Set Android SDK home directory
 export ANDROID_HOME=/home/zfx/Android/Sdk
+
+# Unset any existing Android SDK root variable to avoid conflicts
 unset ANDROID_SDK_ROOT
+
+# Add Android SDK tools and platform-tools directories to PATH for easy access to adb, fastboot, etc.
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+
+# Add Gradle binary directory to PATH for easy access to Gradle commands
 export PATH=$PATH:~/gradle/bin
 
-#Java
+# Java
+
+# Set Java home directory to Java 17 (OpenJDK)
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk 
+
+# Add Java binary directory to PATH for access to java, javac, etc.
 export PATH=$JAVA_HOME/bin:$PATH
+
+# Add user's local binary directory to PATH for user-specific binaries and scripts
 export PATH=$PATH:/home/zfx/.local/bin
 
-echo -e "\e[2 q"  # Forces a block cursor at all times
-
-[ -n "$FBTERM" ] && export TERM=fbterm
-
+# ########################################################################### #
