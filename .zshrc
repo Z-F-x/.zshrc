@@ -1,3 +1,171 @@
+# ########################################################################### #
+#                                Aestethics:                                  #
+# ########################################################################### #
+
+# Forces block cursor at all times
+echo -e "\e[2 q" 
+
+# If the FBTERM environment variable is set (indicating the use of a framebuffer terminal),
+# set the terminal type to 'fbterm' for enhanced color support and graphical capabilities.
+# Enabling true color, 256 color I think:
+[ -n "$FBTERM" ] && export TERM=fbterm
+
+
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export TERM=xterm-256color
+
+# ########################################################################### #
+
+# Custom theme for zsh
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="zfx"
+
+# Plugins
+plugins=(
+    git
+    archlinux
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+
+# runs the oh-my-zsh.sh script from /home/user/.oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# Check archlinux plugin commands here
+# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/archlinux
+
+# Runs everytime a new terminal window is opened
+fastfetch
+
+# fastfetch. Will be disabled if above colorscript was chosen to install
+#fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
+
+# ########################################################################### #
+#                               Aliases begins                                #
+# ########################################################################### #
+
+# Shorthand for showing .txt files
+# alias ls-txt='printf "%s\n" *.txt'
+# alias show-text='printf "%s\n" *.txt'
+# alias txt='printf "%s\n" *.txt'
+# alias lsd='eza -d */ -1 --icons'
+
+alias :qa='exit'
+alias dictionary='gnome-dictionary'
+alias lsd='lsformat; eza -1 --icons --only-dirs'
+alias lsdr='lsformat; eza -1 --icons --only-dirs'
+alias lsdir='lsformat; eza -1 --icons --only-dirs'
+alias lsdirs='lsformat; eza -1 --icons --only-dirs'
+alias lsf='lsformat; eza -1 --icons --only-files; lsfecho;'
+alias lsfa='lsformat; eza -1 --icons --only-files --all; lsfhidden;'
+#alias lsfh="lsformat; eza -1 --icons -a --only-files | grep '^\.'"
+alias lsfh="eza -1 --icons -a --only-files | sed -n '/^\./p'"
+alias lsfg="add_icons_to_files"
+
+# Update pacman, flatpak, snap and AUR
+alias uallmu='sudo pacman -Suy yay -Suy flatpak update snap refresh'
+alias uallp='sudo pacman -Suy && yay -Suy && flatpak update && snap refresh'
+alias uallmi='sudo pacman -Suy; yay -Suy; sudo flatpak update; sudo snap refresh'
+
+
+# Launch a KDE Plasma session through Wayland.
+alias plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias plasmaKDE='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDEplasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDE-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias KDE-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde-launch='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+alias kde='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
+
+
+# alias ls='clear; eza -a --icons -1'
+alias ls='clear; ls_dynamic'
+alias ll='eza -al --icons'
+alias lt='eza -a --tree --level=1 --icons'
+alias lt10='eza -a --tree --level=10 --icons'
+alias lt9='eza -a --tree --level=9 --icons'
+alias lt='eza -a --tree --level=8 --icons'
+alias lt7='eza -a --tree --level=7 --icons'
+alias lt6='eza -a --tree --level=6 --icons'
+alias lt5='eza -a --tree --level=5 --icons'
+alias lt4='eza -a --tree --level=4 --icons'
+alias lt3='eza -a --tree --level=3 --icons'
+alias lt2='eza -a --tree --level=2 --icons'
+alias lt1='eza -a --tree --level=1 --icons'
+alias lt0='eza -a --tree --level=0 --icons'
+
+alias cls='clear; ls'
+alias CLS='clear'
+alias clø='clear'
+alias clå='clear'
+alias clæ='clear'
+alias cøl='clear'
+alias cål='clear'
+alias cæl='clear'
+alias cdl='cdw'
+alias CD='cd'
+alias cD='cd'
+alias Cd='cd'
+
+# Aliases for Arch User Repository
+alias AUR='yay'
+alias Aur='yay'
+alias aur='yay'
+alias auR='yay'
+alias AuR='yay'
+alias Aur='yay'
+
+# ########################################################################### #
+#                               Aliases ends                                  #
+# ########################################################################### #
+
+
+# #############################################################################
+#                           File Operations                                   #
+# #############################################################################
+
+# Move all files (not folders) in current directory to path  
+mvfiles() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: movefiles <destination_folder>"
+    return 1
+  fi
+  find . -maxdepth 1 -type f -exec mv {} "$1" \;
+}
+
+# Move all files and folders in current directory to path
+mvall() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: moveall <destination_folder>"
+    return 1
+  fi
+  mv -- * "$1"
+}
+
+# #############################################################################
+#                          File System Navigation                             #
+# #############################################################################
+
+# Formatting function as empty string is outputtet as blank line 
+lsformat(){
+echo ""
+}
+
+# Informational message at the end of lsf (List Files)
+lsfecho() {
+  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfa\033[38;5;250m to see hidden files.\033[0m\n"
+}
+
+# Informational message at the end of lsfh
+lsfhidden(){
+  echo -e "\n\033[1;37m  \033[38;5;250m Use \033[1;32mlsfh\033[38;5;250m to \033[1;4monly\033[0m hidden files.\033[0m\n"
+}
+
+# add_icons_to_files() {
+#     eza_output=$(eza -1 --icons -a --only-files | sed -n '/^\./p')
 #
 #     while IFS= read -r file; do
 #         # Use eza's output to add the correct icon to each file
