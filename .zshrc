@@ -1,3 +1,13 @@
+
+# Source shell scripts
+
+# source /home/zfx/gnulinux-utils/mount-unmount-drives.sh and all other shell scripts in there
+for file in ~/gnulinux-utils/*.sh; do source $file; done
+
+# source all shell scripts in /home/zfx/gnulinux-zfx/
+for file in ~/gnulinux-zfx/*.sh; do source $file; done
+
+
 # ########################################################################### #
 #                                Aestethics:                                  #
 # ########################################################################### #
@@ -41,91 +51,16 @@ fastfetch
 # fastfetch. Will be disabled if above colorscript was chosen to install
 #fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
 
-# ########################################################################### #
-#                               Aliases begins                                #
-# ########################################################################### #
-
-# Shorthand for showing .txt files
-# alias ls-txt='printf "%s\n" *.txt'
-# alias show-text='printf "%s\n" *.txt'
-# alias txt='printf "%s\n" *.txt'
-# alias lsd='eza -d */ -1 --icons'
-
-alias :qa='exit'
-alias dictionary='gnome-dictionary'
-alias lsd='lsformat; eza -1 --icons --only-dirs'
-alias lsdr='lsformat; eza -1 --icons --only-dirs'
-alias lsdir='lsformat; eza -1 --icons --only-dirs'
-alias lsdirs='lsformat; eza -1 --icons --only-dirs'
-alias lsf='lsformat; eza -1 --icons --only-files; lsfecho;'
-alias lsfa='lsformat; eza -1 --icons --only-files --all; lsfhidden;'
-#alias lsfh="lsformat; eza -1 --icons -a --only-files | grep '^\.'"
-alias lsfh="eza -1 --icons -a --only-files | sed -n '/^\./p'"
-alias lsfg="add_icons_to_files"
-
-# Update pacman, flatpak, snap and AUR
-alias uallmu='sudo pacman -Suy yay -Suy flatpak update snap refresh'
-alias uallp='sudo pacman -Suy && yay -Suy && flatpak update && snap refresh'
-alias uallmi='sudo pacman -Suy; yay -Suy; sudo flatpak update; sudo snap refresh'
-
-
-# Launch a KDE Plasma session through Wayland.
-alias plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias plasmaKDE='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDEplasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDE-plasma='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias KDE-PLASMA='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde-launch='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-alias kde='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
-
-
-# alias ls='clear; eza -a --icons -1'
-alias ls='clear; ls_dynamic'
-alias ll='eza -al --icons'
-alias lt='eza -a --tree --level=1 --icons'
-alias lt10='eza -a --tree --level=10 --icons'
-alias lt9='eza -a --tree --level=9 --icons'
-alias lt='eza -a --tree --level=8 --icons'
-alias lt7='eza -a --tree --level=7 --icons'
-alias lt6='eza -a --tree --level=6 --icons'
-alias lt5='eza -a --tree --level=5 --icons'
-alias lt4='eza -a --tree --level=4 --icons'
-alias lt3='eza -a --tree --level=3 --icons'
-alias lt2='eza -a --tree --level=2 --icons'
-alias lt1='eza -a --tree --level=1 --icons'
-alias lt0='eza -a --tree --level=0 --icons'
-
-alias cls='clear; ls'
-alias CLS='clear'
-alias clø='clear'
-alias clå='clear'
-alias clæ='clear'
-alias cøl='clear'
-alias cål='clear'
-alias cæl='clear'
-alias cdl='cdw'
-alias CD='cd'
-alias cD='cd'
-alias Cd='cd'
-
-# Aliases for Arch User Repository
-alias AUR='yay'
-alias Aur='yay'
-alias aur='yay'
-alias auR='yay'
-alias AuR='yay'
-alias Aur='yay'
-
-# ########################################################################### #
-#                               Aliases ends                                  #
-# ########################################################################### #
 
 
 # #############################################################################
 #                           File Operations                                   #
 # #############################################################################
+
+# Alias for mvfiles
+alias move-files="mvfiles"
+alias move_files="mvfiles"
+alias mv-files="mvfiles"
 
 # Move all files (not folders) in current directory to path  
 mvfiles() {
@@ -135,6 +70,11 @@ mvfiles() {
   fi
   find . -maxdepth 1 -type f -exec mv {} "$1" \;
 }
+
+# Alias for mvall
+alias move-all="mvall"
+alias mv-all="mvall"
+alias move_all="mvall"
 
 # Move all files and folders in current directory to path
 mvall() {
@@ -269,65 +209,6 @@ list_files_and_folders_sort_by_extensions() {
 #   eza --ignore-glob="!*$1*" --icons --only-files
 # }
 
-# Navigation functionality that overwrites normal functionality of the `cd`
-# command. Clears screen inbetween each navigational step. Uses eza.
-
-ls_dynamic() {
-    # Set the directory you want to check (use the current directory by default)
-    DIR="${1:-.}"
-    
-    # Count the total number of files and directories (including hidden ones)
-    item_count=$(find "$DIR" -maxdepth 1 -mindepth 1 | wc -l)
-
-    # Debugging output: show the item count
-    echo "Item count: $item_count"
-
-    # Check if the item count is more than 20
-    if [ "$item_count" -gt 20 ]; then
-        # Just run eza without column formatting
-        eza -a --icons  --group-directories-first "$DIR"
-#clear; eza -a --icons -1 "$DIR"
-
-    else
-        # Run eza with icons and format the output with column
-        eza -a --icons -1 --group-directories-first "$DIR" 
-    fi
-}
-
-# Aliases for open_ls
-alias lsnav='open_ls'
-alias nav='open_ls'
-
-# Function to handle selecting and opening files or directories
-open_ls() {
-    # Use eza (or ls) for listing files and folders
-
-
-    local selected=$(eza -1 --icons "$DIR" | fzf --height=40% --border --prompt="Select a file or folder: ")
-
-    # Strip enclosing single quotes if present
-    selected=$(echo "$selected" | sed "s/^'//;s/'$//")
-
-    # Check if selection is valid
-    if [ -n "$selected" ]; then
-        if [ -d "$selected" ]; then
-            # Navigate into the directory
-            cd "$selected" || echo "Failed to navigate to '$selected'"
-            echo "You are now in: $(pwd)"
-            eza -1 --icons  # Optionally list the contents of the new directory
-        elif [ -f "$selected" ]; then
-            # Open the file in nvim
-            nvim "$selected"
-        else
-            echo "Error: '$selected' is neither a file nor a folder."
-        fi
-    else
-        echo "No selection made."
-    fi
-}
-
-
-
 # Alias turning vim to nvim
 alias vim='nvim'
 
@@ -383,177 +264,170 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
-# ############################################################################ #
-#                         File System Navigation Ends                          # 
+
+# Navigation functionality that overwrites normal functionality of the `cd`
+# command. Clears screen inbetween each navigational step. Uses eza.
+
+# TODO: Check if this actually is being used: Aliases for open_ls
+alias lsnav='open_ls'
+alias nav='open_ls'
+
+# Navigation functionality that overwrites normal functionality of the `cd`
+# command. Clears screen inbetween each navigational step. Uses eza.
+
+ alias ls='clear; ls_dynamic'
+
+ls_dynamic() {
+    # Set the directory you want to check (use the current directory by default)
+    DIR="${1:-.}"
+    
+    # Count the total number of files and directories (including hidden ones)
+    item_count=$(find "$DIR" -maxdepth 1 -mindepth 1 | wc -l)
+
+    # Debugging output: show the item count
+    echo "Item count: $item_count"
+
+    # Check if the item count is more than 20
+    if [ "$item_count" -gt 20 ]; then
+        # Just run eza without column formatting
+        eza -a --icons  --group-directories-first "$DIR"
+#clear; eza -a --icons -1 "$DIR"
+
+    else
+        # Run eza with icons and format the output with column
+        eza -a --icons -1 --group-directories-first "$DIR" 
+    fi
+}
+
+# Function to handle selecting and opening files or directories
+open_ls() {
+    # Use eza (or ls) for listing files and folders
+
+
+    local selected=$(eza -1 --icons "$DIR" | fzf --height=40% --border --prompt="Select a file or folder: ")
+
+    # Strip enclosing single quotes if present
+    selected=$(echo "$selected" | sed "s/^'//;s/'$//")
+
+    # Check if selection is valid
+    if [ -n "$selected" ]; then
+        if [ -d "$selected" ]; then
+            # Navigate into the directory
+            cd "$selected" || echo "Failed to navigate to '$selected'"
+            echo "You are now in: $(pwd)"
+            eza -1 --icons  # Optionally list the contents of the new directory
+        elif [ -f "$selected" ]; then
+            # Open the file in nvim
+            nvim "$selected"
+        else
+            echo "Error: '$selected' is neither a file nor a folder."
+        fi
+    else
+        echo "No selection made."
+    fi
+}
+
+
 # ############################################################################ #
 #                                  cdw begins
 # ############################################################################ #
 #   Set of scripts to keep track of top 25 most used file system paths        #
 # ############################################################################ #
 
+
 remove_duplicates_and_update_visits() {
     local cd_history_file=~/.cd_history
     local cd_visits_file=~/.cd_visits
 
-    # Check if .cd_history exists
     [[ -f "$cd_history_file" ]] || touch "$cd_history_file"
-    # Update .cd_visits
+
     update_cd_visits "$cd_history_file" "$cd_visits_file"
 
-    # Remove duplicates from .cd_history while preserving the latest entry order
+    # Remove duplicates while keeping latest entries
     tac "$cd_history_file" | awk '!seen[$0]++' | tac > "${cd_history_file}.tmp"
     mv "${cd_history_file}.tmp" "$cd_history_file"
 
-    # Replace ./ with ~ in .cd_history
+    # Normalize paths
     replace_dot_slash_with_tilde "$cd_history_file"
-
 }
 
 replace_dot_slash_with_tilde() {
-    local cd_history_file="$1"
-    
-    # Replace occurrences of './' with '~' in the file
-    sed -i 's|^\./|~|g' "$cd_history_file"
+    local file="$1"
+    sed -i 's|^\./|~|g' "$file"
 }
 
-# TODO:
-# Probmel ser ut til å være at det blir ikke skrevet fullstendig path til .cd_visits 
-# Må gå gjennom det og finne ut hvor det går galt, må skrive riktig path slik som .cd_history
-# Må også legge til increment på hvert hit / hver gang bruker søker en filbane.
-
- update_cd_visits() {
-    local cd_history_file="$1"
+update_cd_visits() {
+    local cd_master_log="$1"
     local cd_visits_file="$2"
 
-    # Create a temporary file to store new visit counts
-    tmp_file=$(mktemp)
+    # Ensure the master log exists
+    [[ -f "$cd_master_log" ]] || touch "$cd_master_log"
 
-    # Count visits to each directory and write to the temporary file
-    awk '
-    {
-        count[$0]++;
-    }
-    END {
-        for (dir in count) {
-            print dir " " count[dir];
-        }
-    }' "$cd_history_file" | sort -k2,2nr -k1,1 > "$tmp_file"
-
-    # If the visits file already exists, update it with new counts
-    if [[ -f "$cd_visits_file" ]]; then
-        # Merge the existing visits file with the new counts and sort them
-        awk '
-        BEGIN {
-            while ((getline < "'"$cd_visits_file"'") > 0) {
-                # Read existing data into the count array
-                count[$1] = $2;
-            }
-        }
-        {
-            # Add the new counts from the temporary file
-            count[$1] += $2;
-        }
-        END {
-            for (dir in count) {
-                print dir " " count[dir];
-            }
-        }' "$tmp_file" | sort -k2,2nr -k1,1 > "$cd_visits_file"
-    else
-        # If no visits file exists, simply create it with the new counts
-        mv "$tmp_file" "$cd_visits_file"
-    fi
+    # Count occurrences and store the top 25
+    awk '{ count[$0]++ } END { for (dir in count) print count[dir], dir }' "$cd_master_log" \
+        | sort -nr \
+        | head -n 25 \
+        > "$cd_visits_file"
 }
 
-
 cd() {
-  # Change to the directory using the built-in cd command
-  builtin cd "$1" || return
+    builtin cd "$1" || return
+    local cd_history_file=~/.cd_history
+    local cd_master_log=~/.cd_master_log
+    local cd_visits_file=~/.cd_visits
+    local current_dir=$(pwd)
 
-  # Create .cd_history if it doesn't exist
-  local cd_history_file=~/.cd_history
-  [[ -f "$cd_history_file" ]] || touch "$cd_history_file"
+    [[ -f "$cd_history_file" ]] || touch "$cd_history_file"
+    [[ -f "$cd_master_log" ]] || touch "$cd_master_log"
 
-  # Get the current directory path after the change
-  local current_dir=$(pwd)
+    # Normalize home directory paths
+    [[ "$current_dir" == "$HOME" ]] && current_dir="~"
 
-  # Resolve ~ to the full home directory path
-  local home_dir="$HOME"
+    echo "$current_dir" >> "$cd_history_file"
+    echo "$current_dir" >> "$cd_master_log"
 
-  # If the current directory is the home directory, log as ~
-  if [[ "$current_dir" == "$home_dir" ]]; then
-      current_dir="~"  # Log as ~ if we're in the home directory
-  # If the current directory is inside the home directory, log it as an absolute path
-  elif [[ "$current_dir" == "$home_dir"* ]]; then
-      current_dir="$current_dir"  # Keep it as absolute path
-  # If the user types `cd ~`, log it as `~`
-  elif [[ "$current_dir" == "~" ]]; then
-      current_dir="~"  # Log as ~ if explicitly in the home directory
-  fi
+    update_cd_visits "$cd_master_log" "$cd_visits_file"
 
-  # Log the current absolute directory to .cd_history
-  echo "$current_dir" >> "$cd_history_file"     
-
-  # Remove duplicates and update .cd_visits
-  remove_duplicates_and_update_visits
-
-  # Now call ls_dynamic for the newly navigated directory
-  ls_dynamic "$current_dir"
+    ls_dynamic "$current_dir"
 }
 
 ls_dynamic() {
-  clear
-  # Set the directory you want to check (use the current directory passed as argument)
-  local DIR="${1:-$(pwd)}"
+    clear
+    local DIR="${1:-$(pwd)}"
 
-  # If the directory is "~", resolve it to the actual home directory
-  if [[ "$DIR" == "~" ]]; then
-    DIR="$HOME"
-  fi
+    [[ "$DIR" == "~" ]] && DIR="$HOME"
 
-  # Use `find` on the directory path, correctly handling spaces in paths
-  item_count=$(find "$DIR" -maxdepth 1 -mindepth 1 | wc -l)
+    item_count=$(find "$DIR" -maxdepth 1 -mindepth 1 | wc -l)
+    echo "Item count: $item_count"
 
-  # Debugging output: show the item count
-  echo "Item count: $item_count"
-
-  # Check if the item count is more than 20
-  if [ "$item_count" -gt 20 ]; then
-      # Just run eza without column formatting
-      eza -a --icons  --group-directories-first "$DIR"
-  else
-      # Run eza with icons and format the output with column
-      eza -a --icons -1  --group-directories-first "$DIR"
-  fi
+    if [ "$item_count" -gt 20 ]; then
+        eza -a --icons --group-directories-first "$DIR"
+    else
+        eza -a --icons -1 --group-directories-first "$DIR"
+    fi
 }
 
-
 cdw() {
-    local cd_history_file=~/.cd_history
+    local cd_visits_file=~/.cd_visits
+    [[ -f "$cd_visits_file" ]] || touch "$cd_visits_file"
 
-    # Check if .cd_visits exists
-    [[ -f "$cd_history_file" ]] || touch "$cd_history_file"
+    local dir=$(cut -d' ' -f2- "$cd_visits_file" | fzf --height 20 --reverse --prompt="Select directory: ")
 
-    # Use fzf to list directories, ensuring quoted paths with spaces are handled
-   # local dir=$(cat "$cd_history_file" | fzf --height 20 --reverse --prompt="Select directory: ")
-    local dir=$(cat "$cd_history_file" | head -n 25 | fzf --height 20 --reverse --prompt="Select directory: ")
-    # Check if the selected directory is not empty
     if [[ -n "$dir" ]]; then
-        # Display the cd command in the terminal
         echo "cd $dir"
-
-        # Change to the selected directory
-        eval "cd $dir"
+        eval cd "$dir"
     else
         echo "No directory selected."
     fi
-
-        remove_duplicates_and_update_visits
 }
+
 
 # ############################################################################ #
 # cdw ends - Set of scripts to keep track of top 25 most used file ...         #
 # ############################################################################ #
-#                        Language, Locale & Input begins:                      #
+#                         File System Navigation END.                          # 
+# ############################################################################ #
+#                        Language, Locale & Input BEGIN:                       #
 # ############################################################################ #
 
 # Set Norwegian Bokmål keyboard layout if not already set
@@ -561,23 +435,23 @@ cdw() {
 #     setxkbmap no
 # fi
 
-# Set default language and encoding
-export LANG="en_US.UTF-8"  
+# Set default Nynorsk language and encoding
+export LANG="nn_NO.UTF-8"  
 
-# Ensure UTF-8 character encoding is used
-export LC_CTYPE="en_US.UTF-8"  
+# Ensure Nynorsk UTF-8 character encoding is used
+export LC_CTYPE="nn_NO.UTF-8"  
 
-# Use American Englishfor system messages
-export LC_MESSAGES="en_US.UTF-8"  
+# Use Nynorsk  system messages
+export LC_MESSAGES="nn_NO.UTF-8"  
 
 # Use Norwegian format for date/time (dd.mm.yyyy)
-export LC_TIME="nb_NO.UTF-8"  
+export LC_TIME="nn_NO.UTF-8"  
 
 # Set currency format to Norwegian (Kroner)
-export LC_MONETARY="nb_NO.UTF-8"  
+export LC_MONETARY="nn_NO.UTF-8"  
 
 # Use Norwegian decimal separators (comma instead of dot)
-export LC_NUMERIC="nb_NO.UTF-8"  
+export LC_NUMERIC="nn_NO.UTF-8"  
 
 # Keep default sorting behavior (C uses traditional ASCII sorting)
 export LC_COLLATE="C"  
@@ -627,7 +501,133 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 # Add Java binary directory to PATH for access to java, javac, etc.
 export PATH=$JAVA_HOME/bin:$PATH
 
+
+# Binaries
+
 # Add user's local binary directory to PATH for user-specific binaries and scripts
-export PATH=$PATH:/home/zfx/.local/bin
+# export PATH=$PATH:/home/zfx/.local/bin
+
+# export XDG_DATA_HOME=/var/lib/flatpak/exports/share
+
+# export XDG_DATA_DIRS=/var/lib/flatpak/exports/share
+
+# Add user's local binary directory to PATH for user-specific binaries and scripts
+# export PATH="$HOME/.local/bin:$PATH"
+
+# Ensure Flatpak export paths are included
+# export XDG_DATA_HOME="$HOME/.local/share"
+# export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
+
+export XMODIFIERS=@im=xim
+export GTK_IM_MODULE=xim
+export QT_IM_MODULE=xim
 
 # ########################################################################### #
+#            --- Media Playback Functions with fzf Selection ---
+# ########################################################################### #
+
+# Function to play video files using cvlc (VLC's command-line version)
+vlc() {
+  # If no argument is provided, launch fzf to select a video file.
+  if [[ $# -eq 0 ]]; then
+    # Find common video file types only in the current directory
+    local file
+    file=$(find . -maxdepth 1 -type f \( -iname '*.mp4' -o -iname '*.mkv' -o -iname '*.avi' -o -iname '*.mov' \) 2>/dev/null | fzf --prompt="Select a video file: ")
+    # If a file was selected, play it.
+    if [[ -n "$file" ]]; then
+      cvlc --play-and-exit "$file"
+    fi
+  else
+    # Otherwise, play the specified file(s) directly.
+    cvlc --play-and-exit "$@"
+  fi
+}
+
+
+
+# play() {
+#   # If no argument is provided, launch fzf to select an audio file.
+#   if [[ $# -eq 0 ]]; then
+#     # Find common audio file types (including .wma and .flac) only in the current directory
+#     local file
+#     file=$(find . -maxdepth 1 -type f \( -iname '*.wma' -o -iname '*.mp3' -o -iname '*.wav' -o -iname '*.ogg' -o -iname '*.flac' \) -print0 2>/dev/null | fzf --prompt="Select an audio file: " --read0 --preview="ffprobe -i {} -hide_banner")
+#
+#     # If a file was selected, play it.
+#     if [[ -n "$file" ]]; then
+#       _play_with_controls "$file"
+#     fi
+#   else
+#     # Otherwise, play the specified file(s) directly.
+#     _play_with_controls "$@"
+#   fi
+# }
+#
+# _play_with_controls() {
+#   local file="$1"
+#   local ffplay_pid
+#
+#   # Start ffplay in the background
+#   ffplay -nodisp -autoexit -- "$file" &
+#   ffplay_pid=$!
+#
+#   echo "Playing: $file"
+#   echo -e "Controls: \n[P] Pause/Play | [←] Rewind 5s | [→] Fast Forward 5s | [Q] Quit"
+#
+#   # Capture key presses for controls
+#   while kill -0 "$ffplay_pid" 2>/dev/null; do
+#     # Read a single character without requiring Enter
+#     if read -rsn1 key; then
+#       case "$key" in
+#         p)
+#           # Send space key to ffplay to toggle pause
+#           kill -SIGUSR1 "$ffplay_pid"
+#           echo "Paused/Resumed"
+#           ;;
+#         $'\x1b') # Handle arrow keys (escape sequence)
+#           # Read the next two characters to determine the arrow key
+#           if read -rsn2 -t 0.1 key; then
+#             if [[ "$key" == "[D" ]]; then
+#               # Left arrow: Rewind 5 seconds
+#               kill -SIGUSR2 "$ffplay_pid"
+#               echo "Rewinding 5s..."
+#             elif [[ "$key" == "[C" ]]; then
+#               # Right arrow: Fast forward 5 seconds
+#               kill -SIGUSR2 "$ffplay_pid"
+#               echo "Fast forwarding 5s..."
+#             fi
+#           fi
+#           ;;
+#         q)
+#           # Quit ffplay
+#           echo "Quitting..."
+#           kill "$ffplay_pid"
+#           break
+#           ;;
+#       esac
+#     fi
+#   done
+# }
+
+play() {
+  # If no argument is provided, launch fzf to select an audio file.
+  if [[ $# -eq 0 ]]; then
+    # Find common audio file types (including .wma and .flac) only in the current directory
+    local file
+    file=$(find . -maxdepth 1 -type f \( -iname '*.wma' -o -iname '*.mp3' -o -iname '*.wav' -o -iname '*.ogg' -o -iname '*.flac' \) -print0 2>/dev/null | fzf --prompt="Select an audio file: " --read0 --preview="ffprobe -i {} -hide_banner")
+
+    # If a file was selected, play it.
+    if [[ -n "$file" ]]; then
+      ffplay -nodisp -autoexit -- "$file"
+    fi
+  else
+    # Otherwise, play the specified file(s) directly.
+    ffplay -nodisp -autoexit -- "$@"
+  fi
+}
+
+
+# ########################################################################### #
+#                    --- Media Playback Functions END ---
+# ########################################################################### #
+
+
